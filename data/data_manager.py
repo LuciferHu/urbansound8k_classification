@@ -7,7 +7,6 @@ import torch
 import torch.utils.data as data
 from UrbanSound8K import genData
 from data.data_sets import FolderDataset
-from utils.util import load_audio
 
 
 class CSVDataManager(object):
@@ -71,14 +70,15 @@ class CSVDataManager(object):
                 ret[s].append({'path': fname, 'class': row[1], 'class_idx': row[2]})
         return ret
 
-    def get_loader(self, name):
+    def get_loader(self, name, transforms):
         """
         数据载入方法
+        :param transforms: 对数据做随机变换
         :param name: 'train' or 'val'
         :return: data.DataLoader()
         """
         assert name in self.data_splits
-        dataset = FolderDataset(self.data_splits[name], transforms=None)
+        dataset = FolderDataset(self.data_splits[name], transforms=transforms)
 
         return data.DataLoader(dataset=dataset, **self.loader_params)
 

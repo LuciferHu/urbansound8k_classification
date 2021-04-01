@@ -2,6 +2,7 @@
 import argparse
 import torch
 from data.data_manager import CSVDataManager
+import data as data_module
 from train.models import ModelCalled
 import collections
 from train import Trainer
@@ -30,8 +31,12 @@ def train_main(config):
     classes = data_manager.classes    # 获取所有类别
     num_classes = len(classes)  # 知晓类别数量
 
-    train_data = data_manager.get_loader('train')    # 得到训练集
-    val_data = data_manager.get_loader('val')     # 得到验证集
+    trans_type = config['transforms']['type']    # 变换器名字
+    trans_args = config['transforms']['args']    # 变换器参数
+    transformation = getattr(data_module, trans_type)(trans_args)    # 对数据作变换
+
+    train_data = data_manager.get_loader('train', transformation)    # 得到训练集
+    val_data = data_manager.get_loader('val', transforms=None)     # 得到验证集
 
     model_name = config['model']    # 从json文件中获取模型名称
     model = ModelCalled(model_name, num_classes=num_classes)     # 召唤模型

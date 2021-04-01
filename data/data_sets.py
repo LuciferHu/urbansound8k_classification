@@ -12,16 +12,15 @@ class FolderDataset(data.Dataset):
     自定义dataset，在装载时就已经将音频pad成4s，归一化并且统一到单声道
     """
     def __init__(self, data_arr, transforms=None,
-                 sample_rate=16384,    # 与duration一起，使得mel图的shape=(128, 128)，记住MelSpectrogram里要设置fmax=8000
+                 sample_rate=22050,   # 使用22050采样率装载进原始音频数据，后期频率分析时设置单独采样率
                  n_fft=2048,
                  hop_length=None,
                  n_mels=128,
                  center=False,
-                 duration=4
-                 ):
+                 duration=4):
         self.sample_rate = sample_rate  # 音频采样率
         self.n_fft = n_fft  # stft帧长
-        self.hop_length = n_fft // 4  # 帧移，默认为n_fft的1/4
+        self.hop_length = n_fft // 4   # 帧移，默认为n_fft的1/4
         self.n_mels = n_mels  # 梅尔滤波器组数
         self.center = center  # 帧起始位置，默认使其在t * hop_length
         self.duration = duration  # 读取时长
@@ -37,8 +36,8 @@ class FolderDataset(data.Dataset):
         audio_tensor, label = self._load_file_data(elem['path']), elem['class_idx']
 
         if self.transforms is not None:
-            audio, sr, label = self.transforms.apply(audio_tensor, label)
-            return audio, sr, label
+            audio = self.transforms.apply(audio_tensor)
+            return audio, label
 
         return audio_tensor, label
 
@@ -59,7 +58,7 @@ class FolderDataset(data.Dataset):
         else:
             y = X
 
-        return torch.tensor(y)    # 将np.ndarray转换为tensor
+        return torch.from_numpy(y)    # 将np.ndarray转换为tensor
 
 
 class FolderRawDataset(data.Dataset):
