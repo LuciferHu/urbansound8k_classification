@@ -1,3 +1,4 @@
+from .VGG11 import *
 from .VGG16 import *  # use all these functions in VGG16 file
 from .Lenet import *
 from .mobileNetV3 import *

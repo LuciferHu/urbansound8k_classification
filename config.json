@@ -53,7 +53,7 @@
       "gamma": 0.1
     }
   },
-  "model": "vgg16",
+  "model": "vgg11",
   "trainer": {
     "epochs": 100,
     "save_dir": "saved_cv/",
