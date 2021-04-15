@@ -54,7 +54,7 @@ class AddGaussNoise(object):
     def __init__(self, input_size=88200, mean=0.0, std=None, add_noise_probability=1.0):
         super(AddGaussNoise, self).__init__()
         """
-        注：input_size = duration * sr, sr一定要与FolderDataset.sample_rate相等
+        时域添加高斯噪声，注：input_size = duration * sr, sr一定要与FolderDataset.sample_rate相等
         """
         assert isinstance(input_size, int)  # 指示input_size必须为int，也即音频序列的长度，input_size = sr * duration
         assert isinstance(mean, (int, float))  # mean为int或float
